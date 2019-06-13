@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { ListGroup, ListGroupItem } from "reactstrap";
 import axios from "axios";
 import { API_URL } from "../env";
 import { useGlobal } from "reactn";
@@ -9,28 +10,32 @@ export default function TestPosts() {
 	const [id, setId] = useState(0);
 	const [text, setText] = useState("");
 	const [userId, setUserId] = useState(0);
+	const [items, setItems] = useState([]);
+	const [itemChanged, setItemChanged] = useState(true);
 
-	const postOrPut = () => {
+	const postOrPut = async () => {
 		if (id === 0) {
 			//post
-			console.log("post");
-			axios
-				.post(`${API_URL}/test`, {
-					user_id: userId,
-					text
-				})
-				.then(res => console.log(res));
+			await axios.post(`${API_URL}/test/`, {
+				user_id: userId,
+				text
+			});
+		} else if (text === "delete" && id > 0) {
+			await axios.delete(`${API_URL}/test/${id}/`);
 		} else {
 			//put
-			console.log("put");
-			axios
-				.put(`${API_URL}/test/${id}`, {
-					user_id: userId,
-					text
-				})
-				.then(res => console.log(res));
+			await axios.put(`${API_URL}/test/${id}/`, {
+				user_id: userId,
+				text
+			});
 		}
+		setItemChanged(!itemChanged);
 	};
+
+	useEffect(() => {
+		console.log("afa");
+		axios.get(`${API_URL}/test/`).then(response => setItems(response.data));
+	}, [itemChanged]);
 
 	return (
 		<div>
@@ -78,6 +83,17 @@ export default function TestPosts() {
 				}}
 			/>
 			<input type="submit" name="submit" onClick={postOrPut} />
+			<hr />
+			<ListGroup className="w-50 ml-auto mr-auto">
+				{items.map(item => {
+					return (
+						<ListGroupItem key={item.id}>
+							id: {item.id}, uid: {item.user_id}, text:{" "}
+							{item.text}
+						</ListGroupItem>
+					);
+				})}
+			</ListGroup>
 		</div>
 	);
 }

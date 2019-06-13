@@ -4,7 +4,7 @@ import Header from "./components/Header";
 import Home from "./components/Home";
 import Brothers from "./components/Brothers";
 import Profile from "./components/Profile";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { HashRouter as Router, Switch, Route } from "react-router-dom";
 import { setGlobal } from "reactn";
 import TestPosts from "./components/TestPosts";
 

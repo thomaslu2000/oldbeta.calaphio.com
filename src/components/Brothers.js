@@ -10,13 +10,11 @@ export default function Brothers() {
 
 	const [members, setMembers] = useState([]);
 
-	const getMembers = () => {
-		axios
-			.get(`${API_URL}/user`)
+	const getMembers = async () => {
+		await axios
+			.get(`${API_URL}/user/`)
 			.then(response => setMembers(response.data));
 	};
-
-	console.log(members);
 	return (
 		<div>
 			<h1>Brothers</h1>
