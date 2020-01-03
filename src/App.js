@@ -7,6 +7,7 @@ import Home from "./components/Home"; // And we use them by importing them from 
 import Brothers from "./components/Brothers";
 import Profile from "./components/Profile";
 import TestPosts from "./components/TestPosts";
+import Cal from "./components/Calendar";
 
 // these are some other react libraries that will help us do things
 import { HashRouter as Router, Switch, Route } from "react-router-dom"; //This lets us go to different pages
@@ -35,6 +36,7 @@ function App() {
 						{/** this is where we define which url paths lead to which page
 						if we go to the home page (which would just be beta.calaphio.com), it will display the Home component we imorted */}
 						<Route path="/brothers" exact component={Brothers} />
+						<Route path="/calendar" exact component={Cal} />
 						<Route
 							path="/profile/:user_id"
 							exact

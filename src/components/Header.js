@@ -62,6 +62,16 @@ export default function Header() {
 								Brothers
 							</NavLink>
 						</NavItem>
+
+						<NavItem className="d-flex align-items-center">
+							<NavLink
+								className="font-weight-bold"
+								tag={Link}
+								to="/calendar"
+							>
+								Calendar
+							</NavLink>
+						</NavItem>
 					</Nav>
 				</Collapse>
 			</Navbar>
