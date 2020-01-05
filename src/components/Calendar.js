@@ -4,9 +4,12 @@ import { Calendar, momentLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import axios from "axios";
 import { API_URL } from "../env";
-import BrothersList from "./BrothersList"; // this is a custom component that we'll use to render this component
+import { Container, Row, Col } from "reactstrap";
+import { unsanitize } from "../functions";
+import EventSide from "./EventSide";
+import { withRouter } from "react-router-dom";
 
-export default function Cal() {
+function Cal(props) {
 	const colorDict = {
 		service: "goldenrod",
 		fellowship: "green",
@@ -20,40 +23,40 @@ export default function Cal() {
 		other: "orchid"
 	};
 	const localizer = momentLocalizer(moment);
-	const today = new Date();
+
+	const [events, setEvents] = useState([]);
+	const [eventId, setEventId] = useState(false);
+
+	const [today, setToday] = useState(new Date());
 	const [seen, setSeen] = useState([
 		today.getFullYear() * 100 + today.getMonth()
 	]);
 
 	useEffect(() => {
-		getEvents(today.getFullYear(), today.getMonth());
+		if (props.match.params.event_id) {
+			setEventId(props.match.params.event_id);
+			getDate(props.match.params.event_id);
+		} else {
+			getEvents(today.getFullYear(), today.getMonth());
+		}
 	}, []);
-
-	const [events, setEvents] = useState([]);
 
 	const styleGetter = (event, start, end, isSelected) => {
 		let style = {
 			backgroundColor: isSelected
 				? darkColorDict[event.type]
 				: colorDict[event.type],
-			fontSize: 14
+			fontSize: 12
 		};
 		return {
 			style
 		};
 	};
 
-	const unsanitize = str => {
-		return unescape(
-			str
-				.replace(/&amp;/g, "&")
-				.replace(/&#039;/, "'")
-				.replace(/&rsquo;/, "’")
-		);
-	};
-
 	const onSelect = event => {
-		console.log(event);
+		setEventId(event.eventId);
+		console.log(props.history);
+		props.history.push(`/calendar/${event.eventId}`);
 	};
 
 	const onRangeChange = dates => {
@@ -116,27 +119,43 @@ export default function Cal() {
 				}
 			});
 	};
+	const getDate = async eventId => {
+		await axios.get(`${API_URL}/event/date/${eventId}/`).then(response => {
+			let date = new Date(response.data[0].date);
+			setToday(date);
+			getEvents(date.getFullYear(), date.getMonth());
+		});
+	};
 
 	return (
-		<div
-			style={{
-				height: 1000,
-				marginLeft: "auto",
-				marginRight: "auto",
-				width: "80%"
-			}}
-		>
-			<Calendar
-				events={events}
-				showMultiDayTimes
-				defaultDate={today}
-				views={["month", "week", "day"]}
-				localizer={localizer}
-				eventPropGetter={styleGetter}
-				onSelectEvent={onSelect}
-				onRangeChange={onRangeChange}
-				popup
-			/>
-		</div>
+		<Container>
+			<Row>
+				<Col>
+					<EventSide id={eventId} />
+				</Col>
+				<Col
+					style={{
+						height: 800
+					}}
+					xs="12"
+					md="8"
+				>
+					<Calendar
+						events={events}
+						showMultiDayTimes
+						date={today}
+						views={["month", "week", "day"]}
+						localizer={localizer}
+						eventPropGetter={styleGetter}
+						onSelectEvent={onSelect}
+						onRangeChange={onRangeChange}
+						onNavigate={day => setToday(day)}
+						popup
+					/>
+				</Col>
+			</Row>
+		</Container>
 	);
 }
+
+export default withRouter(Cal);

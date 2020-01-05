@@ -35,7 +35,11 @@ export default function Profile({ match }) {
 				.then(response => setUser(response.data[0]));
 			await axios
 				.get(`${API_URL}/user/desc/${match.params.user_id}/`)
-				.then(response => setDescription(response.data[0].description));
+				.then(response =>
+					setDescription(
+						response.data ? response.data[0].description : ""
+					)
+				);
 		};
 
 		getUser();

@@ -38,6 +38,11 @@ function App() {
 						<Route path="/brothers" exact component={Brothers} />
 						<Route path="/calendar" exact component={Cal} />
 						<Route
+							path="/calendar/:event_id"
+							exact
+							render={props => <Cal {...props} />}
+						/>
+						<Route
 							path="/profile/:user_id"
 							exact
 							component={Profile}
