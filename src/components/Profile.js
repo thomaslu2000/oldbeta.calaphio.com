@@ -43,7 +43,7 @@ export default function Profile({ match }) {
 		};
 
 		getUser();
-	}, []);
+	}, [match.params.user_id]);
 
 	return (
 		<div>

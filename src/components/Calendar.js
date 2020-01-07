@@ -55,7 +55,6 @@ function Cal(props) {
 
 	const onSelect = event => {
 		setEventId(event.eventId);
-		console.log(props.history);
 		props.history.push(`/calendar/${event.eventId}`);
 	};
 

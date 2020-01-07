@@ -1,29 +1,83 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import moment from "moment";
+import axios from "axios";
+import { API_URL } from "../env";
+import {
+	Container,
+	Card,
+	CardBody,
+	CardText,
+	CardHeader,
+	CardFooter,
+	UncontrolledCollapse
+} from "reactstrap";
+import { unsanitize } from "../functions";
 
 export default function Home() {
+	const [semId, setSemId] = useState(false);
+
+	const [announcements, setAnnouncements] = useState([]);
+
+	const getAnnouncements = async () => {
+		await axios
+			.get(`${API_URL}/announcements/sem/${semId}`)
+			.then(response => {
+				setAnnouncements(response.data);
+			});
+	};
+
+	useEffect(() => {
+		let lastId = async () => {
+			await axios.get(`${API_URL}/semesters/last`).then(response => {
+				setSemId(response.data[0].id);
+			});
+		};
+		lastId();
+	}, []);
+
+	useEffect(() => {
+		if (semId) {
+			getAnnouncements();
+		}
+	}, [semId]);
+
 	return (
 		// this is just a test page for now
-		<div>
-			<h1>Alpha Phi Omega</h1>
-			<p>
-				Here's to Alpha Phi Omega, Loyal Brothers we,
-				<br />
-				True to self and to each other, firm in loyalty.
-				<br />
-				Daily working, daily striving, ever more to be
-				<br />
-				Men of Alpha Phi Omega, Our Fraternity.
-				<br />
-				<br />
-				Brothers clasp the hands of Brothers, strong the circle we
-				<br />
-				Ever mindful, ever serving all humanity.
-				<br />
-				Now we raise our grateful voices in our song to thee:
-				<br />
-				Men of Alpha Phi Omega, may we always be.
-				<br />
-			</p>
-		</div>
+		<Container>
+			<h1>Announcements</h1>
+			<hr />
+			{announcements.map(data => {
+				return (
+					<Card key={"card" + data.id} className="my-2">
+						<CardHeader
+							tag="h3"
+							id={"toggler" + data.id}
+							dangerouslySetInnerHTML={{
+								__html: unsanitize(data.title)
+							}}
+							style={{
+								backgroundColor: " #b5b5b5 "
+							}}
+						></CardHeader>
+						<UncontrolledCollapse toggler={"#toggler" + data.id}>
+							<CardBody>
+								<CardText
+									dangerouslySetInnerHTML={{
+										__html: unsanitize(data.text)
+									}}
+								>
+									{/* {unsanitize(data.text)} */}
+								</CardText>
+							</CardBody>
+							<CardFooter className="text-muted bg-lighten">{`- ${
+								data.firstname
+							} ${data.lastname} (${data.pledgeclass}), ${moment(
+								data.publish_time
+							).format("MMMM Do YYYY")}`}</CardFooter>
+						</UncontrolledCollapse>
+					</Card>
+				);
+			})}
+		</Container>
 	);
 }

@@ -15,15 +15,13 @@ import {
 import { unsanitize } from "../functions";
 import moment from "moment";
 import { Link } from "react-router-dom";
+import { useGlobal } from "reactn";
 
 export default function EventSide(props) {
 	const [data, setData] = useState(false);
 	const [attending, setAttending] = useState([]);
 	const [comments, setComments] = useState([]);
-
-	useEffect(() => {
-		if (props.id) getData();
-	}, [props.id]);
+	const [global] = useGlobal();
 
 	const getData = async () => {
 		await axios
@@ -40,6 +38,11 @@ export default function EventSide(props) {
 			setData(response.data[0]);
 		});
 	};
+
+	useEffect(() => {
+		console.log(global);
+		if (props.id) getData();
+	}, [props.id]);
 
 	if (data) {
 		let startDate = moment(data.start);
