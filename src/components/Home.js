@@ -48,7 +48,7 @@ export default function Home() {
 			<hr />
 			{announcements.map(data => {
 				return (
-					<Card key={"card" + data.id} className="my-2">
+					<Card key={"card" + data.id} className="my-5">
 						<CardHeader
 							tag="h3"
 							id={"toggler" + data.id}

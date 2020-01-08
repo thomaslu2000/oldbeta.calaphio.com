@@ -126,15 +126,28 @@ export default function Header() {
 					color="light"
 					light
 					expand="md"
-					className="bg-white position-relative"
-					style={{ height: 80 }}
+					className="position-relative"
+					style={{
+						height: 80
+					}}
 				>
 					<NavbarBrand tag={Link} to="/">
 						Calaphio
 					</NavbarBrand>
 					<NavbarToggler onClick={toggleDrop} />
 					<Collapse isOpen={isOpen} navbar>
-						<Nav className="ml-auto" navbar>
+						<Nav
+							className="ml-auto"
+							style={
+								isOpen
+									? {
+											backgroundColor:
+												"rgba(255, 255, 255, 0.8)"
+									  }
+									: {}
+							}
+							navbar
+						>
 							<NavItem className="d-flex align-items-center">
 								<NavLink
 									className="font-weight-bold"
@@ -176,7 +189,7 @@ export default function Header() {
 								</NavItem>
 							)) || (
 								<Fragment>
-									<NavItem className="d-flex align-items-center w-25">
+									<NavItem className="d-flex align-items-center w-50">
 										<Container className="ml-auto mr-0">
 											<InputGroup size="sm">
 												<Input
