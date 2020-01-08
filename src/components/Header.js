@@ -142,7 +142,7 @@ export default function Header() {
 								isOpen
 									? {
 											backgroundColor:
-												"rgba(255, 255, 255, 0.8)"
+												"rgba(255, 255, 255, 1)"
 									  }
 									: {}
 							}
