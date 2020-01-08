@@ -179,7 +179,9 @@ function CommentPanel(props) {
 									{moment(comment.time).fromNow()}
 								</Badge>
 								<br />{" "}
-								<p className="text-right">{comment.body}</p>
+								<p className="text-right">
+									{unsanitize(comment.body)}
+								</p>
 							</ListGroupItem>
 						);
 					})}
