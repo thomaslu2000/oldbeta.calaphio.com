@@ -55,9 +55,6 @@ export default function Home() {
 							dangerouslySetInnerHTML={{
 								__html: unsanitize(data.title)
 							}}
-							style={{
-								backgroundColor: " #b5b5b5 "
-							}}
 						></CardHeader>
 						<UncontrolledCollapse toggler={"#toggler" + data.id}>
 							<CardBody>
@@ -65,9 +62,7 @@ export default function Home() {
 									dangerouslySetInnerHTML={{
 										__html: unsanitize(data.text)
 									}}
-								>
-									{/* {unsanitize(data.text)} */}
-								</CardText>
+								></CardText>
 							</CardBody>
 							<CardFooter className="text-muted bg-lighten">{`- ${
 								data.firstname

@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Fragment } from "react";
 import axios from "axios";
 import { API_URL } from "../env";
 import {
 	Badge,
+	Button,
 	Card,
 	CardBody,
 	CardTitle,
@@ -10,7 +11,9 @@ import {
 	CardText,
 	Table,
 	ListGroup,
-	ListGroupItem
+	ListGroupItem,
+	UncontrolledCollapse,
+	Collapse
 } from "reactstrap";
 import { unsanitize } from "../functions";
 import moment from "moment";
@@ -40,7 +43,6 @@ export default function EventSide(props) {
 	};
 
 	useEffect(() => {
-		console.log(global);
 		if (props.id) getData();
 	}, [props.id]);
 
@@ -94,57 +96,95 @@ export default function EventSide(props) {
 }
 
 function AttendTable(props) {
+	const [isOpen, setIsOpen] = useState(true);
+
+	const toggle = () => setIsOpen(!isOpen);
+
 	return (
-		<Table striped>
-			<thead>
-				<tr>
-					<th className="w-25"># ({props.attending.length})</th>
-					<th> Name</th>
-					<th className="w-25"> Time</th>
-				</tr>
-			</thead>
-			<tbody>
-				{props.attending.map((attend, i) => {
-					return (
-						<tr key={"attend" + i}>
-							<th scope="row" className="small">
-								{i + 1}
+		<Fragment>
+			<div className="pb-2">
+				<Button onClick={toggle}>
+					{" "}
+					{isOpen ? "Hide" : "Show"} Attending
+				</Button>
+			</div>
+			<Collapse isOpen={isOpen}>
+				<Table striped>
+					<thead>
+						<tr>
+							<th className="w-25">
+								{" "}
+								({props.attending.length})
 							</th>
-							<td>
-								<Link to={`/profile/${attend.user_id}`}>
-									{attend.firstname + " " + attend.lastname}
-								</Link>
-							</td>
-							<td className="small">
-								{moment(attend.time).fromNow()}
-							</td>
+							<th> Name</th>
+							<th className="w-25"> Time</th>
 						</tr>
-					);
-				})}
-			</tbody>
-		</Table>
+					</thead>
+
+					<tbody>
+						{props.attending.map((attend, i) => {
+							return (
+								<tr key={"attend" + i}>
+									<th scope="row" className="small">
+										{i + 1}
+									</th>
+									<td>
+										<Link to={`/profile/${attend.user_id}`}>
+											{attend.firstname +
+												" " +
+												attend.lastname}
+										</Link>
+									</td>
+									<td className="small">
+										{moment(attend.time).fromNow()}
+									</td>
+								</tr>
+							);
+						})}
+					</tbody>
+				</Table>
+			</Collapse>
+		</Fragment>
 	);
 }
 
 function CommentPanel(props) {
+	const [isOpen, setIsOpen] = useState(true);
+
+	const toggle = () => setIsOpen(!isOpen);
+
 	return (
-		<ListGroup className="small text-left" flush>
-			{props.comments.map((comment, i) => {
-				return (
-					<ListGroupItem key={"comment" + i}>
-						<Link
-							to={`/profile/${comment.user_id}`}
-							className={"text-dark font-weight-bold"}
-						>
-							{comment.firstname} {comment.lastname}
-						</Link>
-						<Badge color="secondary" className="float-right">
-							{moment(comment.time).fromNow()}
-						</Badge>
-						<br /> <p className="text-right">{comment.body}</p>
-					</ListGroupItem>
-				);
-			})}
-		</ListGroup>
+		<Fragment>
+			<div className="pb-2">
+				<Button onClick={toggle}>
+					{" "}
+					{isOpen ? "Hide" : "Show"} Comments
+				</Button>
+			</div>
+			<Collapse isOpen={isOpen}>
+				<ListGroup className="small text-left" flush>
+					{props.comments.map((comment, i) => {
+						return (
+							<ListGroupItem key={"comment" + i}>
+								<Link
+									to={`/profile/${comment.user_id}`}
+									className={"text-dark font-weight-bold"}
+								>
+									{comment.firstname} {comment.lastname}
+								</Link>
+								<Badge
+									color="secondary"
+									className="float-right"
+								>
+									{moment(comment.time).fromNow()}
+								</Badge>
+								<br />{" "}
+								<p className="text-right">{comment.body}</p>
+							</ListGroupItem>
+						);
+					})}
+				</ListGroup>
+			</Collapse>
+		</Fragment>
 	);
 }

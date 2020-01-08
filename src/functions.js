@@ -1,4 +1,5 @@
 export function unsanitize(str) {
+	if (!str) return "";
 	return unescape(
 		str
 			.replace(/&amp;/g, "&")
