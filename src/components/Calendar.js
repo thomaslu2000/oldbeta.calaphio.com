@@ -137,6 +137,7 @@ function Cal(props) {
 		});
 	};
 	const selectSlot = e => {
+		setToday(e.start);
 		setDaysEvent(
 			events.filter(d => {
 				console.log(d.start);
@@ -164,12 +165,16 @@ function Cal(props) {
 					md="8"
 				>
 					{isMobile && (
-						<ListGroup flush className="w-75 mx-auto pb-3">
+						<ListGroup className="w-75 mx-auto py-3">
+							<ListGroupItem>
+								Long Press to View Events on a Day
+							</ListGroupItem>
 							{daysEvents.map(d => {
 								return (
 									<ListGroupItem
 										key={"day" + d.eventId}
 										onClick={() => setEventId(d.eventId)}
+										className="text-primary"
 									>
 										<Badge
 											className="float-left"
@@ -195,12 +200,15 @@ function Cal(props) {
 						onView={e => setView(e)}
 						localizer={localizer}
 						eventPropGetter={styleGetter}
-						onSelectEvent={isMobile ? selectSlot : onSelect}
+						selectable="ignoreEvents"
+						onSelectSlot={selectSlot}
+						onSelectEvent={
+							isMobile && view === "month" ? selectSlot : onSelect
+						}
+						longPressThreshold="100"
 						onRangeChange={onRangeChange}
 						onNavigate={day => setToday(day)}
 						popup
-						selectable
-						onSelectSlot={selectSlot}
 					/>
 				</Col>
 			</Row>
