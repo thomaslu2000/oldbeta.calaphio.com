@@ -13,6 +13,7 @@ import {
 	Badge
 } from "reactstrap";
 import { unsanitize } from "../functions";
+import { Link } from "react-router-dom";
 import EventSide from "./EventSide";
 import { withRouter } from "react-router-dom";
 import { isMobile } from "react-device-detect";
@@ -40,6 +41,7 @@ function Cal(props) {
 		today.getFullYear() * 100 + today.getMonth()
 	]);
 	const [daysEvents, setDaysEvent] = useState([]);
+	const [view, setView] = useState("month");
 
 	useEffect(() => {
 		if (props.match.params.event_id) {
@@ -55,7 +57,7 @@ function Cal(props) {
 			backgroundColor: isSelected
 				? darkColorDict[event.type]
 				: colorDict[event.type],
-			fontSize: isMobile ? 8 : 12
+			fontSize: isMobile ? (view === "month" ? 0 : 8) : 12
 		};
 		return {
 			style
@@ -134,6 +136,19 @@ function Cal(props) {
 			getEvents(date.getFullYear(), date.getMonth());
 		});
 	};
+	const selectSlot = e => {
+		setDaysEvent(
+			events.filter(d => {
+				console.log(d.start);
+				console.log(e.start);
+				return (
+					d.start.getFullYear() === e.start.getFullYear() &&
+					d.start.getMonth() === e.start.getMonth() &&
+					d.start.getDate() === e.start.getDate()
+				);
+			})
+		);
+	};
 	console.log(daysEvents);
 	return (
 		<Container>
@@ -143,62 +158,50 @@ function Cal(props) {
 				</Col>
 				<Col
 					style={{
-						height: isMobile ? 400 : 800
+						height: isMobile && view != "day" ? 400 : 800
 					}}
 					xs="12"
 					md="8"
 				>
+					{isMobile && (
+						<ListGroup flush className="w-75 mx-auto pb-3">
+							{daysEvents.map(d => {
+								return (
+									<ListGroupItem
+										key={"day" + d.eventId}
+										onClick={() => setEventId(d.eventId)}
+									>
+										<Badge
+											className="float-left"
+											style={{
+												backgroundColor:
+													darkColorDict[d.type]
+											}}
+											pill
+										>
+											{d.type}
+										</Badge>
+										{d.title}
+									</ListGroupItem>
+								);
+							})}
+						</ListGroup>
+					)}
 					<Calendar
 						events={events}
 						showMultiDayTimes
 						date={today}
 						views={["month", "week", "day"]}
+						onView={e => setView(e)}
 						localizer={localizer}
 						eventPropGetter={styleGetter}
-						onSelectEvent={onSelect}
+						onSelectEvent={isMobile ? selectSlot : onSelect}
 						onRangeChange={onRangeChange}
 						onNavigate={day => setToday(day)}
 						popup
 						selectable
-						onSelectSlot={e => {
-							setDaysEvent(
-								events.filter(d => {
-									console.log(d.start);
-									console.log(e.start);
-									return (
-										d.start.getFullYear() ===
-											e.start.getFullYear() &&
-										d.start.getMonth() ===
-											e.start.getMonth() &&
-										d.start.getDate() === e.start.getDate()
-									);
-								})
-							);
-						}}
+						onSelectSlot={selectSlot}
 					/>
-				</Col>
-			</Row>
-			<Row>
-				<Col>
-					<ListGroup flush className="w-75 mx-auto">
-						{daysEvents.map(d => {
-							return (
-								<ListGroupItem key={"day" + d.eventId}>
-									<Badge
-										className="float-left"
-										style={{
-											backgroundColor:
-												darkColorDict[d.type]
-										}}
-										pill
-									>
-										{d.type}
-									</Badge>
-									{d.title}
-								</ListGroupItem>
-							);
-						})}
-					</ListGroup>
 				</Col>
 			</Row>
 		</Container>
