@@ -150,7 +150,6 @@ function Cal(props) {
 			})
 		);
 	};
-	console.log(daysEvents);
 	return (
 		<Container>
 			<Row>
