@@ -17,6 +17,7 @@ import { Link } from "react-router-dom";
 import EventSide from "./EventSide";
 import { withRouter } from "react-router-dom";
 import { isMobile } from "react-device-detect";
+import "./css/calendar.css";
 
 function Cal(props) {
 	const colorDict = {
@@ -154,9 +155,10 @@ function Cal(props) {
 		<Container>
 			<Row>
 				<Col>
-					<EventSide id={eventId} />
+					<EventSide id={eventId} className="py-3" />
 				</Col>
 				<Col
+					className="px-0 border rounded calendar-container"
 					style={{
 						height: isMobile && view != "day" ? 400 : 800
 					}}
@@ -166,7 +168,7 @@ function Cal(props) {
 					{isMobile && (
 						<ListGroup className="w-75 mx-auto py-3">
 							<ListGroupItem>
-								Long Press to View Events on a Day
+								Long Press on a Day to View Events
 							</ListGroupItem>
 							{daysEvents.map(d => {
 								return (
@@ -192,6 +194,7 @@ function Cal(props) {
 						</ListGroup>
 					)}
 					<Calendar
+						className="calendar px-2 py-2 border rounded bg-white w-100 mx-auto"
 						events={events}
 						showMultiDayTimes
 						date={today}
@@ -204,7 +207,7 @@ function Cal(props) {
 						onSelectEvent={
 							isMobile && view === "month" ? selectSlot : onSelect
 						}
-						longPressThreshold="100"
+						longPressThreshold={100}
 						onRangeChange={onRangeChange}
 						onNavigate={day => setToday(day)}
 						popup

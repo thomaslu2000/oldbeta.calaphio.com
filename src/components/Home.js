@@ -12,6 +12,7 @@ import {
 	UncontrolledCollapse
 } from "reactstrap";
 import { unsanitize } from "../functions";
+import "./css/style.css";
 
 export default function Home() {
 	const [semId, setSemId] = useState(false);
@@ -42,37 +43,46 @@ export default function Home() {
 	}, [semId]);
 
 	return (
-		// this is just a test page for now
 		<Container>
-			<h1>Announcements</h1>
+			<div>
+				<h1 className="title px-3 py-2 mx-auto">
+					<b>Announcements</b>
+				</h1>
+			</div>
 			<hr />
-			{announcements.map(data => {
-				return (
-					<Card key={"card" + data.id} className="my-5">
-						<CardHeader
-							tag="h3"
-							id={"toggler" + data.id}
-							dangerouslySetInnerHTML={{
-								__html: unsanitize(data.title)
-							}}
-						></CardHeader>
-						<UncontrolledCollapse toggler={"#toggler" + data.id}>
-							<CardBody>
-								<CardText
-									dangerouslySetInnerHTML={{
-										__html: unsanitize(data.text)
-									}}
-								></CardText>
-							</CardBody>
-							<CardFooter className="text-muted bg-lighten">{`- ${
-								data.firstname
-							} ${data.lastname} (${data.pledgeclass}), ${moment(
-								data.publish_time
-							).format("MMMM Do YYYY")}`}</CardFooter>
-						</UncontrolledCollapse>
-					</Card>
-				);
-			})}
+			{announcements &&
+				announcements.map(data => {
+					return (
+						<Card key={"card" + data.id} className="my-5">
+							<CardHeader
+								className="card-header"
+								tag="h3"
+								id={"toggler" + data.id}
+								dangerouslySetInnerHTML={{
+									__html: unsanitize(data.title)
+								}}
+							></CardHeader>
+							<UncontrolledCollapse
+								toggler={"#toggler" + data.id}
+							>
+								<CardBody>
+									<CardText
+										dangerouslySetInnerHTML={{
+											__html: unsanitize(data.text)
+										}}
+									></CardText>
+								</CardBody>
+								<CardFooter className="text-muted bg-lighten">{`- ${
+									data.firstname
+								} ${data.lastname} (${
+									data.pledgeclass
+								}), ${moment(data.publish_time).format(
+									"MMMM Do YYYY"
+								)}`}</CardFooter>
+							</UncontrolledCollapse>
+						</Card>
+					);
+				})}
 		</Container>
 	);
 }

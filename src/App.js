@@ -1,6 +1,6 @@
 import React from "react"; // this is where we import the react library, so we can use its nice things
 
-import "./App.css"; // importing a css file for the html stuff below
+import "./components/css/style.css"; // importing a css file for the html stuff below
 
 import Header from "./components/Header"; // React lets us make some custom html components
 import Home from "./components/Home"; // And we use them by importing them from the components folder

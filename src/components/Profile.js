@@ -53,7 +53,7 @@ export default function Profile({ match }) {
 					src={user.profile_pic}
 					alt="Card"
 				/>
-				<CardBody style={{ fontSize: "20px" }}>
+				<CardBody style={{ fontSize: "20px", textAlign: "center" }}>
 					<CardTitle>
 						<h2>
 							{user.firstname} {user.lastname}
@@ -65,7 +65,7 @@ export default function Profile({ match }) {
 					<CardSubtitle>Dynasty: {user.dynasty}</CardSubtitle>
 					<CardSubtitle>Major: {user.major}</CardSubtitle>
 				</CardBody>
-				<CardBody>
+				<CardBody style={{ textAlign: "center" }}>
 					<CardText
 						dangerouslySetInnerHTML={{
 							__html: description

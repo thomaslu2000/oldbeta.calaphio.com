@@ -18,6 +18,7 @@ import {
 	Alert
 } from "reactstrap";
 import { useCookies } from "react-cookie";
+import "./css/style.css";
 
 export default function Header() {
 	const successes = {
@@ -104,6 +105,7 @@ export default function Header() {
 			}
 			return (
 				<Alert
+					className="w-75 mx-auto"
 					color={color}
 					isOpen={visible}
 					toggle={() => setVisible(false)}
@@ -123,28 +125,23 @@ export default function Header() {
 			<header>
 				<Navbar
 					fixed="top"
-					color="light"
 					light
 					expand="md"
-					className="position-relative"
+					className="position-relative main-nav"
 					style={{
 						height: 80
 					}}
 				>
 					<NavbarBrand tag={Link} to="/">
-						Calaphio
+						<h2>
+							<b>Calaphio</b>
+						</h2>
 					</NavbarBrand>
 					<NavbarToggler onClick={toggleDrop} />
 					<Collapse isOpen={isOpen} navbar>
 						<Nav
-							className="ml-auto"
-							style={
-								isOpen
-									? {
-											backgroundColor:
-												"rgba(255, 255, 255, 1)"
-									  }
-									: {}
+							className={
+								isOpen ? "ml-auto hidden-nav" : "ml-auto"
 							}
 							navbar
 						>
@@ -157,7 +154,7 @@ export default function Header() {
 									Home
 								</NavLink>
 							</NavItem>
-							<NavItem className="d-flex align-items-center">
+							{/* <NavItem className="d-flex align-items-center">
 								<NavLink
 									className="font-weight-bold"
 									tag={Link}
@@ -165,7 +162,7 @@ export default function Header() {
 								>
 									Brothers
 								</NavLink>
-							</NavItem>
+							</NavItem> */}
 
 							<NavItem className="d-flex align-items-center">
 								<NavLink
@@ -177,7 +174,7 @@ export default function Header() {
 								</NavLink>
 							</NavItem>
 							{(loggedIn && (
-								<NavItem className="d-flex align-items-center pt-2">
+								<NavItem className="d-flex align-items-center pt-2 ml-2	">
 									<Button
 										color="primary"
 										className="mr-0"
@@ -234,9 +231,19 @@ export default function Header() {
 				</Navbar>
 			</header>
 			{loggedIn && (
-				<div>
-					<h1>Welcome, {global.name}</h1>
-				</div>
+				<Alert className="mx-auto welcome" color="info">
+					<h3>
+						<b>
+							{"Welcome, "}
+							<Link
+								to={`/profile/${global.userId}`}
+								className={"font-weight-bold"}
+							>
+								{global.name}
+							</Link>
+						</b>
+					</h3>
+				</Alert>
 			)}
 			{showSuccess(loginSuccess)}
 		</Fragment>

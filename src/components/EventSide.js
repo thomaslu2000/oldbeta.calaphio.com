@@ -13,7 +13,10 @@ import {
 	ListGroup,
 	ListGroupItem,
 	UncontrolledCollapse,
-	Collapse
+	Collapse,
+	InputGroup,
+	InputGroupAddon,
+	Input
 } from "reactstrap";
 import { unsanitize } from "../functions";
 import moment from "moment";
@@ -50,7 +53,7 @@ export default function EventSide(props) {
 		let startDate = moment(data.start);
 		let endDate = moment(data.end);
 		return (
-			<Card>
+			<Card className="mb-3">
 				<CardBody>
 					<CardTitle className="h1 mb-2 pt-2 font-weight-bold">
 						{unsanitize(data.title)}
@@ -78,13 +81,13 @@ export default function EventSide(props) {
 					></CardText>
 					<AttendTable attending={attending} />
 					<hr />
-					<CommentPanel comments={comments} />
+					<CommentPanel comments={comments} eventId={props.id} />
 				</CardBody>
 			</Card>
 		);
 	} else {
 		return (
-			<Card>
+			<Card className="mb-3">
 				<CardBody>
 					<CardTitle className="h1 mb-2 pt-2 font-weight-bold">
 						Select An Event
@@ -150,20 +153,33 @@ function AttendTable(props) {
 
 function CommentPanel(props) {
 	const [isOpen, setIsOpen] = useState(true);
+	const [comment, setComment] = useState("");
+	const [comments, setComments] = useState(props.comments);
+	const [global] = useGlobal();
 
 	const toggle = () => setIsOpen(!isOpen);
+	const submitComment = () => {
+		sendComment(escape(comment));
+	};
+
+	const sendComment = async comm => {
+		await axios
+			.post(`${API_URL}/event/comment/${props.eventId}/`, {
+				comment: comm,
+				user_id: global.userId,
+				timestamp: moment().format("YYYY-MM-DD hh:mm:ss")
+			})
+			.then(res => {
+				setComments(comments.concat(res.data));
+				setComment("");
+			});
+	};
 
 	return (
 		<Fragment>
-			<div className="pb-2">
-				<Button onClick={toggle}>
-					{" "}
-					{isOpen ? "Hide" : "Show"} Comments
-				</Button>
-			</div>
 			<Collapse isOpen={isOpen}>
 				<ListGroup className="small text-left" flush>
-					{props.comments.map((comment, i) => {
+					{comments.map((comment, i) => {
 						return (
 							<ListGroupItem key={"comment" + i}>
 								<Link
@@ -186,7 +202,28 @@ function CommentPanel(props) {
 						);
 					})}
 				</ListGroup>
+				{global.userId && (
+					<InputGroup size="sm">
+						<Input
+							placeholder="Comment Here"
+							name="comment"
+							value={comment}
+							onChange={e => setComment(e.target.value)}
+						/>
+						<InputGroupAddon addonType="append">
+							<Button color="success" onClick={submitComment}>
+								Submit
+							</Button>
+						</InputGroupAddon>
+					</InputGroup>
+				)}
 			</Collapse>
+			<div className="pt-2">
+				<Button onClick={toggle}>
+					{" "}
+					{isOpen ? "Hide" : "Show"} Comments
+				</Button>
+			</div>
 		</Fragment>
 	);
 }
