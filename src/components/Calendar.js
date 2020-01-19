@@ -154,11 +154,11 @@ function Cal(props) {
 	return (
 		<Container>
 			<Row>
-				<Col>
+				<Col xs="12" md="4">
 					<EventSide id={eventId} className="py-3" />
 				</Col>
 				<Col
-					className="px-0 border rounded calendar-container"
+					className="border rounded calendar-container"
 					style={{
 						height: isMobile && view != "day" ? 400 : 800
 					}}
@@ -194,7 +194,7 @@ function Cal(props) {
 						</ListGroup>
 					)}
 					<Calendar
-						className="calendar px-2 py-2 border rounded bg-white w-100 mx-auto"
+						className="calendar px-1 py-2 border rounded bg-white"
 						events={events}
 						showMultiDayTimes
 						date={today}
