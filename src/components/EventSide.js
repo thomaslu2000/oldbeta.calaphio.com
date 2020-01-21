@@ -53,7 +53,7 @@ export default function EventSide(props) {
 		let startDate = moment(data.start);
 		let endDate = moment(data.end);
 		return (
-			<Card className="mb-3">
+			<Card className="mb-3 w-100">
 				<CardBody>
 					<CardTitle className="h1 mb-2 pt-2 font-weight-bold">
 						{unsanitize(data.title)}
@@ -87,7 +87,7 @@ export default function EventSide(props) {
 		);
 	} else {
 		return (
-			<Card className="mb-3">
+			<Card className="mb-3 w-100">
 				<CardBody>
 					<CardTitle className="h1 mb-2 pt-2 font-weight-bold">
 						Select An Event

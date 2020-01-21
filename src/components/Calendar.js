@@ -10,14 +10,16 @@ import {
 	Col,
 	ListGroup,
 	ListGroupItem,
-	Badge
+	Badge,
+	Button
 } from "reactstrap";
 import { unsanitize } from "../functions";
-import { Link } from "react-router-dom";
 import EventSide from "./EventSide";
+import CreateEvent from "./CreateEvent";
 import { withRouter } from "react-router-dom";
 import { isMobile } from "react-device-detect";
 import "./css/calendar.css";
+import { useGlobal } from "reactn";
 
 function Cal(props) {
 	const colorDict = {
@@ -33,16 +35,16 @@ function Cal(props) {
 		Other: "orchid"
 	};
 	const localizer = momentLocalizer(moment);
-
 	const [events, setEvents] = useState([]);
 	const [eventId, setEventId] = useState(false);
-
 	const [today, setToday] = useState(new Date());
 	const [seen, setSeen] = useState([
 		today.getFullYear() * 100 + today.getMonth()
 	]);
 	const [daysEvents, setDaysEvent] = useState([]);
 	const [view, setView] = useState("month");
+	const [global] = useGlobal();
+	const [showCreate, setShowCreate] = useState(false);
 
 	useEffect(() => {
 		if (props.match.params.event_id) {
@@ -97,6 +99,73 @@ function Cal(props) {
 		}
 	};
 
+	const submitEvent = async (
+		title,
+		location,
+		date,
+		start,
+		end,
+		categories,
+		description
+	) => {
+		await axios
+			.post(`${API_URL}/event/`, {
+				title: title,
+				location: location,
+				description: description,
+				date: date,
+				time_start: start,
+				time_end: end,
+				type_interchapter: categories.includes("Interchapter") ? 1 : 0,
+				type_service_chapter: categories.includes("Service to Chapter")
+					? 1
+					: 0,
+				type_service_campus: categories.includes("Service to Campus")
+					? 1
+					: 0,
+				type_service_community: categories.includes(
+					"Service to Community"
+				)
+					? 1
+					: 0,
+				type_service_country: categories.includes("Service to Country")
+					? 1
+					: 0,
+				type_fellowship: categories.includes("Fellowship") ? 1 : 0,
+				type_fundraiser: categories.includes("Fundraiser") ? 1 : 0,
+				type_pledge_meeting: categories.includes("Pledge") ? 1 : 0,
+				creator_id: global.userId,
+				start_at: `${date} ${start}`,
+				end_at: `${date} ${end}`
+			})
+			.then(res => {
+				setShowCreate(false);
+				let type =
+					categories.includes("Service to Country") ||
+					categories.includes("Service to Campus") ||
+					categories.includes("Service to Chapter") ||
+					categories.includes("Service to Community") ||
+					categories.includes("Fundraiser")
+						? "Service"
+						: Boolean(categories.includes("Fellowship"))
+						? "Fellowship"
+						: Boolean(categories.includes("Pledge"))
+						? "Pledge"
+						: "Other";
+				setEvents(
+					events.concat([
+						{
+							eventId: res.data,
+							title: title,
+							start: new Date(`${date} ${start}`),
+							end: new Date(`${date} ${end}`),
+							type
+						}
+					])
+				);
+			});
+	};
+
 	const getEvents = async (year, month, add = false) => {
 		await axios
 			.get(`${API_URL}/event/month/${year}/${month + 1}`)
@@ -116,8 +185,7 @@ function Cal(props) {
 						title: unsanitize(event.title),
 						start: new Date(event.start),
 						end: new Date(event.end),
-						type,
-						"allDay?": event.time_allday
+						type
 					});
 				}
 				if (add) {
@@ -155,7 +223,25 @@ function Cal(props) {
 		<Container>
 			<Row>
 				<Col xs="12" md="4">
-					<EventSide id={eventId} className="py-3" />
+					{global.userId && (
+						<Row>
+							<Button
+								color="primary"
+								size="lg"
+								className="w-100 mx-auto mb-2"
+								onClick={e => setShowCreate(!showCreate)}
+							>
+								{showCreate ? "Hide Menu" : "Create Event"}
+							</Button>
+						</Row>
+					)}
+					<Row>
+						{showCreate ? (
+							<CreateEvent submitEvent={submitEvent} />
+						) : (
+							<EventSide id={eventId} className="py-3" />
+						)}
+					</Row>
 				</Col>
 				<Col
 					className="border rounded calendar-container"
