@@ -36,7 +36,7 @@ export default function CreateEvent(props) {
 
 	return (
 		<div>
-			<Form className="pt-3">
+			<Form className="pt-3 pl-1">
 				<FormGroup>
 					<Label for="title">Event Title</Label>
 					<Input

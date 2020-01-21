@@ -63,7 +63,9 @@ export default function Header() {
 							name: info.firstname
 						};
 						setGlobal(details);
-						setCookie("login", details);
+						let expr = new Date();
+						expr.setMonth(expr.getMonth() + 1);
+						setCookie("login", details, { expires: expr });
 						setLoginSuccess(successes.SUCCESS);
 						setLoggedIn(true);
 					} else {

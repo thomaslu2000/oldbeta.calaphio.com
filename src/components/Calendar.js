@@ -260,7 +260,12 @@ function Cal(props) {
 								return (
 									<ListGroupItem
 										key={"day" + d.eventId}
-										onClick={() => setEventId(d.eventId)}
+										onClick={() => {
+											props.history.push(
+												`/calendar/${d.eventId}`
+											);
+											setEventId(d.eventId);
+										}}
 										className="text-primary"
 									>
 										<Badge

@@ -47,9 +47,10 @@ export default function Profile({ match }) {
 
 	return (
 		<div>
-			<Card className={"w-75 ml-auto mx-auto"}>
+			<Card className={"w-75 mx-auto"}>
 				<CardImg
-					className="p-5 w-50 mx-auto"
+					className="p-3 mx-auto"
+					style={{ maxWidth: "700px" }}
 					src={user.profile_pic}
 					alt="Card"
 				/>

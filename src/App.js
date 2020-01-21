@@ -23,7 +23,7 @@ function App() {
 					<Header />
 					{/* Here, we make our header (which we made in a different file then imported) 
 								Since this is above the Switch component, it's present on every page!*/}
-					<div style={{ paddingTop: "50px" }}>
+					<div style={{ paddingTop: "20px" }}>
 						{/* you can still set style manually by setting the style to a javascript object (which is kind of like a dictionary) */}
 						<Switch>
 							<Route path="/" exact component={Home} />{" "}
