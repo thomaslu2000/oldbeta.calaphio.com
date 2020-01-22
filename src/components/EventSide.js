@@ -157,6 +157,10 @@ function CommentPanel(props) {
 	const [comments, setComments] = useState(props.comments);
 	const [global] = useGlobal();
 
+	useEffect(() => {
+		setComments(props.comments);
+	}, [props.comments]);
+
 	const toggle = () => setIsOpen(!isOpen);
 	const submitComment = () => {
 		sendComment(escape(comment));
