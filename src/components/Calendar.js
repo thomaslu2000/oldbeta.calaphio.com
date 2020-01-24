@@ -170,6 +170,7 @@ function Cal(props) {
 		await axios
 			.get(`${API_URL}/event/month/${year}/${month + 1}`)
 			.then(response => {
+				console.log(response.data);
 				let ne = [];
 				for (let i = 0; i < response.data.length; i++) {
 					let event = response.data[i];
@@ -209,8 +210,6 @@ function Cal(props) {
 		setToday(e.start);
 		setDaysEvent(
 			events.filter(d => {
-				console.log(d.start);
-				console.log(e.start);
 				return (
 					d.start.getFullYear() === e.start.getFullYear() &&
 					d.start.getMonth() === e.start.getMonth() &&
