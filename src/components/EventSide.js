@@ -68,13 +68,17 @@ export default function EventSide(props) {
 	const signOff = async () => {
 		await axios
 			.delete(`${API_URL}/event/attend/${props.id}/`, {
-				user_id: global.userId
+				data: {
+					user_id: global.userId
+				}
 			})
 			.then(res => {
 				if (typeof res.data !== "string") {
 					console.log(res);
 					setSignedUp(false);
-					setAttending(attending.filter(obj => obj.user_id != global.userId));
+					setAttending(
+						attending.filter(obj => obj.user_id != global.userId)
+					);
 				}
 			});
 	};
@@ -85,7 +89,10 @@ export default function EventSide(props) {
 		return (
 			<Card className="mb-3 w-100">
 				<CardBody>
-					<Button onClick={signedUp ? signOff : signUp} className="float-right">
+					<Button
+						onClick={signedUp ? signOff : signUp}
+						className="float-right"
+					>
 						{signedUp ? "Take Me Off" : "Sign Up"}
 					</Button>
 					<CardTitle className="h1 mb-2 pt-2 font-weight-bold">
