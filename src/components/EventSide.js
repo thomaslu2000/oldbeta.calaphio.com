@@ -49,17 +49,17 @@ export default function EventSide(props) {
 		if (props.id) getData();
 	}, [props.id]);
 
-
 	const [signedUp, setSignedUp] = useState(false);
 
 	const signUp = async () => {
 		await axios
-			.post(`${API_URL}/event/attend/${props.eventId}/`, {
+			.post(`${API_URL}/event/attend/${props.id}/`, {
 				user_id: global.userId,
 				timestamp: moment().format("YYYY-MM-DD hh:mm:ss")
 			})
 			.then(res => {
 				setSignedUp(true);
+				setAttending(attending.concat(res.data));
 			});
 	};
 
@@ -69,11 +69,13 @@ export default function EventSide(props) {
 		return (
 			<Card className="mb-3 w-100">
 				<CardBody>
-					<Button onClick = {signUp}>Sign Up</Button>
+					<Button onClick={signUp}>
+						{signedUp ? "Take Me Off" : "Sign Up"}
+					</Button>
 					<CardTitle className="h1 mb-2 pt-2 font-weight-bold">
 						{unsanitize(data.title)}
 					</CardTitle>
-					
+
 					<CardSubtitle className="text-secondary mb-3 font-weight-light">
 						Location: {data.location} <br /> Date:{" "}
 						{startDate.format("LL")}
@@ -194,8 +196,6 @@ function CommentPanel(props) {
 				setComment("");
 			});
 	};
-
-	
 
 	return (
 		<Fragment>
