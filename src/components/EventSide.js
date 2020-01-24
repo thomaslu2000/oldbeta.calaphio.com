@@ -58,8 +58,10 @@ export default function EventSide(props) {
 				timestamp: moment().format("YYYY-MM-DD hh:mm:ss")
 			})
 			.then(res => {
-				setSignedUp(true);
-				setAttending(attending.concat(res.data));
+				if (typeof res.data !== "string") {
+					setSignedUp(true);
+					setAttending(attending.concat(res.data));
+				}
 			});
 	};
 
@@ -69,7 +71,7 @@ export default function EventSide(props) {
 		return (
 			<Card className="mb-3 w-100">
 				<CardBody>
-					<Button onClick={signUp}>
+					<Button onClick={signUp} className="float-right">
 						{signedUp ? "Take Me Off" : "Sign Up"}
 					</Button>
 					<CardTitle className="h1 mb-2 pt-2 font-weight-bold">
