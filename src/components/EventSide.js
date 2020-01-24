@@ -33,7 +33,8 @@ export default function EventSide(props) {
 		await axios
 			.get(`${API_URL}/event/attend/${props.id}/`)
 			.then(response => {
-				setAttending(response.data || []);
+				let attenders = response.data || [];
+				setAttending(attenders);
 			});
 		await axios
 			.get(`${API_URL}/event/comment/${props.id}/`)
