@@ -19,6 +19,7 @@ import {
 } from "reactstrap";
 import { useCookies } from "react-cookie";
 import "./css/style.css";
+import moment from "moment-timezone";
 
 export default function Header() {
 	const successes = {
@@ -46,6 +47,8 @@ export default function Header() {
 			setLoggedIn(true);
 		}
 	}, []);
+
+	moment.tz.setDefault("America/California");
 
 	const logIn = async () => {
 		await axios
