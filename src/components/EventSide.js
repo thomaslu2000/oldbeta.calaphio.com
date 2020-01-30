@@ -19,7 +19,7 @@ import {
 	Input
 } from "reactstrap";
 import { unsanitize } from "../functions";
-import moment from "moment";
+import moment from "moment-timezone";
 import { Link } from "react-router-dom";
 import { useGlobal } from "reactn";
 
@@ -28,8 +28,9 @@ export default function EventSide(props) {
 	const [attending, setAttending] = useState([]);
 	const [comments, setComments] = useState([]);
 	const [global] = useGlobal();
-
 	const [signedUp, setSignedUp] = useState(false);
+
+	moment.tz.setDefault("Asia/Baku");
 
 	const getData = async () => {
 		await axios
@@ -38,10 +39,10 @@ export default function EventSide(props) {
 				let attenders = response.data || [];
 				setAttending(attenders);
 				attenders.forEach(element => {
-					if(element.user_id === global.userId) {
+					if (element.user_id === global.userId) {
 						setSignedUp(true);
 					}
-				})
+				});
 			});
 		await axios
 			.get(`${API_URL}/event/comment/${props.id}/`)

@@ -48,8 +48,6 @@ export default function Header() {
 		}
 	}, []);
 
-	moment.tz.setDefault("America/California");
-
 	const logIn = async () => {
 		await axios
 			.post(`${API_URL}/login/`, {
