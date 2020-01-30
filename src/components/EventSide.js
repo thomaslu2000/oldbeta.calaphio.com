@@ -29,12 +29,19 @@ export default function EventSide(props) {
 	const [comments, setComments] = useState([]);
 	const [global] = useGlobal();
 
+	const [signedUp, setSignedUp] = useState(false);
+
 	const getData = async () => {
 		await axios
 			.get(`${API_URL}/event/attend/${props.id}/`)
 			.then(response => {
 				let attenders = response.data || [];
 				setAttending(attenders);
+				attenders.forEach(element => {
+					if(element.user_id === global.userId) {
+						setSignedUp(true);
+					}
+				})
 			});
 		await axios
 			.get(`${API_URL}/event/comment/${props.id}/`)
@@ -49,8 +56,6 @@ export default function EventSide(props) {
 	useEffect(() => {
 		if (props.id) getData();
 	}, [props.id]);
-
-	const [signedUp, setSignedUp] = useState(false);
 
 	const signUp = async () => {
 		await axios
@@ -75,7 +80,6 @@ export default function EventSide(props) {
 			})
 			.then(res => {
 				if (typeof res.data !== "string") {
-					console.log(res);
 					setSignedUp(false);
 					setAttending(
 						attending.filter(obj => obj.user_id != global.userId)
